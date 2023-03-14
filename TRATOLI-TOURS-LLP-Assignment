@@ -1,0 +1,46 @@
+print("Become the programmer you're meant to be!")
+import random
+
+class Minefield:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.mines = []
+        self.field = [[0 for _ in range(width)] for _ in range(height)]
+        
+    def add_mine(self, x, y):
+        self.mines.append((x, y))
+        self.field[y][x] = 'X'
+        
+    def add_mines(self, num_mines):
+        for i in range(num_mines):
+            while True:
+                x, y = random.randint(0, self.width-1), random.randint(0, self.height-1)
+                if (x, y) not in self.mines:
+                    self.add_mine(x, y)
+                    break
+                    
+    def count_nearby_mines(self, x, y):
+        count = 0
+        for i in range(max(0, x-1), min(self.width, x+2)):
+            for j in range(max(0, y-1), min(self.height, y+2)):
+                if self.field[j][i] == 'X':
+                    count += 1
+        return count
+    
+    def analyze_minefield(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.field[y][x] == 0:
+                    count = self.count_nearby_mines(x, y)
+                    self.field[y][x] = count
+                    
+    def print_minefield(self):
+        for row in self.field:
+            print(row)
+
+# Example usage:
+minefield = Minefield(5, 5)
+minefield.add_mines(5)
+minefield.analyze_minefield()
+minefield.print_minefield()
